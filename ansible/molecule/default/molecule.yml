@@ -1,0 +1,46 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: vagrant
+  provider:
+    name: virtualbox
+platforms:
+  - name: loki2slack-role
+    box: ubuntu/focal64
+provisioner:
+  name: ansible
+  lint:
+    name: ansible-lint
+  playbooks:
+    side_effect: side-effect.yml
+  config_options:
+    defaults:
+      callback_whitelist: profile_tasks, yaml
+verifier:
+  name: testinfra
+  lint:
+    name: flake8
+  options:
+    force-ansible: True
+    junitxml: ${JUNITXML:-./.build/junit.xml}
+lint: |
+  yamllint .
+  ansible-lint
+scenario:
+  name: default
+  check_sequence:
+    - check
+  test_sequence:
+    - dependency
+    - cleanup
+    - destroy
+    - syntax
+    - create
+    - prepare
+    - converge
+#    - idempotence
+    - side_effect
+    - verify
+    - cleanup
+    - destroy

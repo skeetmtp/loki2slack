@@ -1,0 +1,16 @@
+---
+
+- name: "loki2slack systemd daemon reload"
+  systemd:
+    daemon_reload: true
+  become: true
+  tags:
+    - loki2slack
+
+- name: "loki2slack restart"
+  service:
+    name: "loki2slack.service"
+    state: restarted
+  become: true
+  tags:
+    - loki2slack

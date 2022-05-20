@@ -1,0 +1,15 @@
+[Unit]
+Description=loki2slack Service
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=loki2slack
+Group=loki2slack
+Type=simple
+WorkingDirectory=/home/loki2slack/loki2slack
+Environment="PATH=/home/loki2slack/loki2slack/venv/bin"
+ExecStart=/home/loki2slack/loki2slack/venv/bin/python3 -u main.py
+
+[Install]
+WantedBy=multi-user.target

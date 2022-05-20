@@ -1,0 +1,17 @@
+---
+
+slack:
+  token: "xoxb-foo-bar-baz"
+  username: loki
+  url: "https://slack.com/api/chat.postMessage"
+
+grafana:
+  url: "http://localhost:3000/explore?orgId=1"
+
+loki:
+  url: "ws://localhost:3100"
+  sources:
+    - name: 'systemd-journal'
+      channel: "#alerts"
+      selector: |
+        {job="systemd-journal", level="warning"}

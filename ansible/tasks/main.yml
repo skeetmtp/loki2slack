@@ -1,0 +1,12 @@
+---
+
+- name: Install basics
+  include: install.yml
+
+- name: Deploy app
+  include: deploy.yml
+
+- name: Setup service
+  include: service.yml
+
+- meta: flush_handlers

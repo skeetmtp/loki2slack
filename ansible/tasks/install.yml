@@ -1,0 +1,52 @@
+---
+
+- name: Update apt cache
+  apt:
+    update_cache: true
+    cache_valid_time: 3600
+  register: result
+  become: true
+  retries: 6
+  delay: 10
+  until: result is succeeded
+  tags:
+    - loki2slack
+    - install
+
+- name: Install packages
+  apt:
+    state: present
+    pkg:
+      - acl
+      - unzip
+      - python3-venv
+  register: result
+  become: true
+  retries: 6
+  delay: 10
+  until: result is succeeded
+  tags:
+    - loki2slack
+    - install
+
+- name: Add 'loki2slack' group
+  group:
+    name: loki2slack
+    state: present
+  become: true
+  tags:
+    - loki2slack
+    - install
+
+- name: Add users
+  user:
+    name: "loki2slack"
+    shell: /bin/bash
+    system: true
+    groups: "loki2slack"
+    create_home: true
+    state: "present"
+  become: true
+  tags:
+    - loki2slack
+    - install

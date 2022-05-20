@@ -1,0 +1,28 @@
+---
+
+- name: Add service
+  template:
+    src: "loki2slack.service.j2"
+    dest: "/lib/systemd/system/loki2slack.service"
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - "loki2slack systemd daemon reload"
+    - "loki2slack restart"
+  become: true
+  tags:
+    - loki2slack
+    - install
+
+- name: Start service
+  service:
+    name: "loki2slack.service"
+    state: started
+    enabled: true
+  become: true
+  tags:
+    - loki2slack
+    - install
+
+- meta: flush_handlers

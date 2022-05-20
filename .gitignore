@@ -1,0 +1,6 @@
+settings.yml
+loki2slack.spec
+venv/
+build/
+dist/
+*.pyc

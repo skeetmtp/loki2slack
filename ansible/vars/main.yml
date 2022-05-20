@@ -1,0 +1,2 @@
+---
+loki2slack_git_root: "{{ lookup('env', 'GIT_ROOT') | default('../../..', True) }}"

@@ -1,0 +1,28 @@
+---
+- name: Prepare
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Install python
+      raw: test -e /usr/bin/python || test -e /usr/bin/python3 || (sudo apt update && sudo apt install -y python-apt python-minimal python-zipstream)
+      register: result
+      until: result is succeeded
+      retries: 6
+      delay: 10
+      changed_when: false
+    - name: Gather facts
+      setup:
+    - name: Install apt packages needed for Ubuntu "Bionic"
+      apt:
+        update_cache: true
+        state: present
+        pkg:
+          - python-apt
+          - python-minimal
+          - python-zipstream
+      register: result
+      when: ansible_distribution_major_version == '18'
+      become: true
+      retries: 3
+      delay: 10
+      until: result is succeeded

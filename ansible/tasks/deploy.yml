@@ -1,0 +1,83 @@
+
+---
+
+- name: Synchronization using rsync protocol
+  ansible.posix.synchronize:
+    src: "{{ loki2slack_git_root }}/loki2slack"
+    dest: "/home/loki2slack"
+    delete: true
+    checksum: true
+    use_ssh_args: true
+    owner: false
+    group: false
+    rsync_opts:
+      - "--exclude=venv"
+      - "--exclude=settings.yml"
+  become: true
+  #no_log: true
+  notify:
+    - "loki2slack restart"
+  when: not ansible_check_mode
+  tags:
+    - loki2slack
+    - deploy
+    - rsync
+
+- name: Ensure directories with ownership to 'loki2slack' user
+  file:
+    path: "/home/loki2slack/loki2slack/"
+    state: directory
+    owner: "loki2slack"
+    group: "users"
+    recurse: true
+  become: true
+  tags:
+    - loki2slack
+    - deploy
+    - rsync
+
+- name: Upgrade pip
+  pip:
+    name: pip
+    state: latest
+    virtualenv_command: "python3 -m venv"
+    virtualenv: "/home/loki2slack/loki2slack/venv"
+  changed_when: false
+  when:
+    - not ansible_check_mode
+  become: true
+  become_user: "loki2slack"
+  tags:
+    - loki2slack
+    - deploy
+    - pip
+
+- name: Install pip packages
+  pip:
+    virtualenv_command: "python3 -m venv"
+    virtualenv: "/home/loki2slack/loki2slack/venv"
+    requirements: "/home/loki2slack/loki2slack/requirements.txt"
+  when:
+    - not ansible_check_mode
+  become: true
+  become_user: "loki2slack"
+  tags:
+    - loki2slack
+    - deploy
+    - pip2
+
+- name: Add settings.yml
+  template:
+    src: "{{ loki2slack_settings }}"
+    dest: "/home/loki2slack/loki2slack/settings.yml"
+    owner: loki2slack
+    group: loki2slack
+    mode: '0644'
+  notify:
+    - "loki2slack restart"
+  become: true
+  when:
+    - loki2slack_settings is defined
+  tags:
+    - loki2slack
+    - install
