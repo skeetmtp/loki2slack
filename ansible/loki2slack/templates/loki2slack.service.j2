@@ -10,6 +10,9 @@ Type=simple
 WorkingDirectory=/home/loki2slack/loki2slack
 Environment="PATH=/home/loki2slack/loki2slack/venv/bin"
 ExecStart=/home/loki2slack/loki2slack/venv/bin/python3 -u main.py
+# Wait RestartSec before an auto restart on-failure
+Restart=on-failure
+RestartSec=5s
 
 [Install]
 WantedBy=multi-user.target

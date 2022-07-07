@@ -3,8 +3,8 @@
 
 - name: Synchronization using rsync protocol
   ansible.posix.synchronize:
-    src: "{{ loki2slack_git_root }}/loki2slack"
-    dest: "/home/loki2slack"
+    src: "src/"
+    dest: "/home/loki2slack/loki2slack"
     delete: true
     checksum: true
     use_ssh_args: true

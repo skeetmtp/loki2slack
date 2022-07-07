@@ -21,3 +21,10 @@ python3 main.py
 ```
 pyinstaller main.py -y -F --clean -n "loki2slack"
 ```
+
+## test
+
+```
+# emit warning on host
+logger -p user.warn "warning world"
+```
