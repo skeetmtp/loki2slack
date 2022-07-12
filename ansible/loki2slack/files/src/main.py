@@ -50,13 +50,14 @@ def grafana_link(selector, ts):
 def on_message(ws, message, source):
     res = json.loads(message)
     username = source["name"]
+    selector = source["selector"]
     streams = res["streams"]
     for stream in streams:
         meta = stream["stream"]
         values = stream["values"]
         for value in values:
-            link = grafana_link(source["selector"], int(value[0])/(1_000_000_000))
-            message = "*{meta}* • <{link}|:male-technologist:>".format(meta=dict(sorted(meta.items())), link=link)
+            link = grafana_link(selector, int(value[0])/(1_000_000_000))
+            message = "*{meta}* • <{link}|:male-technologist:>\n{selector}".format(meta=dict(sorted(meta.items())), selector=selector, link=link)
             res = slack(message, username, source["channel"])
             logger.info(message)
             logger.info(res)
