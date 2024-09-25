@@ -1,12 +1,12 @@
 ---
 
 - name: Install basics
-  include: install.yml
+  include_tasks: install.yml
 
 - name: Deploy app
-  include: deploy.yml
+  include_tasks: deploy.yml
 
 - name: Setup service
-  include: service.yml
+  include_tasks: service.yml
 
 - meta: flush_handlers
